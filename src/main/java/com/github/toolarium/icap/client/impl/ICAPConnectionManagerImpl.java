@@ -6,11 +6,12 @@
 package com.github.toolarium.icap.client.impl;
 
 import com.github.toolarium.icap.client.ICAPConnectionManager;
+
+import javax.net.ssl.SSLSocket;
+import javax.net.ssl.SSLSocketFactory;
 import java.io.IOException;
 import java.net.Socket;
 import java.net.UnknownHostException;
-import javax.net.ssl.SSLSocket;
-import javax.net.ssl.SSLSocketFactory;
 
 /**
  * Implements the {@link ICAPConnectionManager}.
@@ -20,7 +21,7 @@ import javax.net.ssl.SSLSocketFactory;
 public class ICAPConnectionManagerImpl implements ICAPConnectionManager {
 
     /**
-     * @see com.github.toolarium.icap.client.ICAPConnectionManager#createSocket(java.lang.String, int, boolean)
+     * @see ICAPConnectionManager#createSocket(String, int, boolean)
      */
     @Override
     public Socket createSocket(String hostname, int port, boolean secureConnection) throws UnknownHostException, IOException {

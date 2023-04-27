@@ -5,18 +5,16 @@
  */
 package com.github.toolarium.icap.client;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
 import com.github.toolarium.icap.client.dto.ICAPConstants;
 import com.github.toolarium.icap.client.dto.ICAPHeaderInformation;
 import com.github.toolarium.icap.client.dto.ICAPMode;
 import com.github.toolarium.icap.client.exception.ContentBlockedException;
-import java.io.IOException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import java.io.IOException;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 
 /**
@@ -125,7 +123,7 @@ public class ICAPAllow204Tests extends AbstractICAPClientTest {
         assertEquals(2, icapHeaderInformation.getHeaders().get(ICAPConstants.HEADER_KEY_ENCAPSULATED).size());
         assertEquals("res-hdr=0", "" + icapHeaderInformation.getHeaders().get(ICAPConstants.HEADER_KEY_ENCAPSULATED).get(0));
         assertEquals("res-body=170", "" + icapHeaderInformation.getHeaders().get(ICAPConstants.HEADER_KEY_ENCAPSULATED).get(1));
-        assertEquals(457, ex.getContent().length());
+        assertEquals(458, ex.getContent().length());
     }    
 
 
@@ -197,6 +195,6 @@ public class ICAPAllow204Tests extends AbstractICAPClientTest {
         
         assertEquals("res-hdr=0", "" + icapHeaderInformation.getHeaders().get(ICAPConstants.HEADER_KEY_ENCAPSULATED).get(0));
         assertEquals("res-body=170", "" + icapHeaderInformation.getHeaders().get(ICAPConstants.HEADER_KEY_ENCAPSULATED).get(1));
-        assertEquals(457, ex.getContent().length());
+        assertEquals(458, ex.getContent().length());
     }    
 }

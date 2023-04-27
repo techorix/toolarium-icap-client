@@ -174,7 +174,7 @@ public class ICAPRequestInformation implements Serializable {
 
 
     /**
-     * @see java.lang.Object#equals(java.lang.Object)
+     * @see Object#equals(Object)
      */
     @Override
     public boolean equals(Object obj) {
@@ -198,7 +198,7 @@ public class ICAPRequestInformation implements Serializable {
 
 
     /**
-     * @see java.lang.Object#toString()
+     * @see Object#toString()
      */
     @Override
     public String toString() {

@@ -1,0 +1,15 @@
+
+---
+SHARED ICAP SERVICE HELM CHART {{ .Chart.Name }}-{{ .Chart.Version }}
+---
+
+
+| Env variable     | Default     | Type    | Description                                                        |
+|------------------|-------------|---------|--------------------------------------------------------------------|
+| QUARKUS_LOG_LEVEL| INFO        | String  | set to WARN, FINE, FINER ... https://quarkus.io/guides/logging     |
+| ICAP_SOURCE      | file        | String  | type of data we want to scan                                       |
+| ICAP_HOSTNAME    | localhost   | String  | IP or Hostname of Dataport ICAP Service                            |
+| ICAP_SERVICENAME | srv_clamav  | String  | Servicename of Dataport ICAP Service for internal billing purposes |
+| ICAP_USERNAME    | user        | String  | Username we use for billing purposes                               |
+| ICAP_PORT        | '''1344'''  | int     | Port of Dataport ICAP Service                                      |
+| ICAP_ENABLED     | '''false''' | boolean | Enable the feature and relay files to Dataport ICAP Service        |

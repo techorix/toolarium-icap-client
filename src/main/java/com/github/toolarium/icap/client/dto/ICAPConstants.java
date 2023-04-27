@@ -24,7 +24,8 @@ public interface ICAPConstants {
     String HEADER_KEY_PREVIEW = "Preview";
     String HEADER_KEY_ALLOW = "Allow";
     String HEADER_KEY_X_VIOLATIONS_FOUND = "X-Violations-Found";
-    String HEADER_KEY_X_INFECTION_FOUND = "X-Infection-Found";    
+    String HEADER_KEY_X_INFECTION_FOUND = "X-Infection-Found";
+    String HEADER_KEY_X_BLOCK_MALWARE = "X-Block-Reason: Malware found";
     String HEADER_KEY_X_BLOCKED = "X-Blocked";    
     
     // ICAP client library headers

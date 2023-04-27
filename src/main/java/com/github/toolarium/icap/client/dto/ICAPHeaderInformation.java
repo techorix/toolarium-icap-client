@@ -117,6 +117,14 @@ public class ICAPHeaderInformation implements Serializable {
         this.message = message;
     }
 
+    /**
+     * Get the header entries
+     *
+     * @return the header entries
+     */
+    public Map<String, List<String>> getHeaders() {
+        return headers;
+    }
 
     /**
      * Set the header entries
@@ -127,17 +135,6 @@ public class ICAPHeaderInformation implements Serializable {
         this.headers = headers;
     }
 
-
-    /**
-     * Get the header entries
-     *
-     * @return the header entries
-     */
-    public Map<String, List<String>> getHeaders() {
-        return headers;
-    }
-
-    
     /**
      * Check if a specific header exists
      *
@@ -161,7 +158,7 @@ public class ICAPHeaderInformation implements Serializable {
 
 
     /**
-     * @see java.lang.Object#hashCode()
+     * @see Object#hashCode()
      */
     @Override
     public int hashCode() {
@@ -173,7 +170,7 @@ public class ICAPHeaderInformation implements Serializable {
 
 
     /**
-     * @see java.lang.Object#equals(java.lang.Object)
+     * @see Object#equals(Object)
      */
     @Override
     public boolean equals(Object obj) {
@@ -194,7 +191,7 @@ public class ICAPHeaderInformation implements Serializable {
 
 
     /**
-     * @see java.lang.Object#toString()
+     * @see Object#toString()
      */
     @Override
     public String toString() {

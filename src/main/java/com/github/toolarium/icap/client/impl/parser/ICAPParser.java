@@ -7,6 +7,7 @@ package com.github.toolarium.icap.client.impl.parser;
 
 import com.github.toolarium.icap.client.dto.ICAPConstants;
 import com.github.toolarium.icap.client.dto.ICAPHeaderInformation;
+
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -25,23 +26,12 @@ public final class ICAPParser {
 
     
     /**
-     * Private class, the only instance of the singelton which will be created by accessing the holder class.
-     *
-     * @author patrick
-     */
-    private static class HOLDER {
-        static final ICAPParser INSTANCE = new ICAPParser();
-    }
-
-    
-    /**
      * Constructor
      */
     private ICAPParser() {
         // NOP
     }
 
-    
     /**
      * Get the instance
      *
@@ -50,8 +40,7 @@ public final class ICAPParser {
     public static ICAPParser getInstance() {
         return HOLDER.INSTANCE;
     }
-    
-    
+
     /**
      * Parse the protocol line
      *
@@ -60,7 +49,7 @@ public final class ICAPParser {
      */
     public ICAPHeaderInformation parseICAPHeaderInformation(String protocolHeaderLine) {
         ICAPHeaderInformation headerInformation = new ICAPHeaderInformation();
-        
+
         // parse ICAP protocol header line
         if (protocolHeaderLine != null && !protocolHeaderLine.isBlank()) {
             Matcher matcher = LINE_STATUS_PATTERN.matcher(protocolHeaderLine);
@@ -74,11 +63,10 @@ public final class ICAPParser {
 
         return headerInformation;
     }
-
     
     /**
-     * Parse a raw header 
-     * 
+     * Parse a raw header
+     *
      * @param headerLines The raw header lines
      * @return the parsed header
      */
@@ -94,11 +82,11 @@ public final class ICAPParser {
         for (String line : headerLines) {
             int idx = line.indexOf(':');
             String value = line.substring(idx + 1).trim();
-            if (idx > 0) {                
+            if (idx > 0) {
                 key = line.substring(0, idx);
                 value = line.substring(idx + 1).trim();
             }
-            
+
             List<String> valueList = headers.get(key);
             if (valueList == null) {
                 valueList = new ArrayList<>();
@@ -115,10 +103,9 @@ public final class ICAPParser {
                 add(valueList, value.split("\\,"));
             }
         }
-        
+
         return headers;
     }
-
 
     /**
      * Add
@@ -130,5 +117,14 @@ public final class ICAPParser {
         for (int i = 0; i < values.length; i++) {
             valueList.add(values[i].trim());
         }
+    }
+
+    /**
+     * Private class, the only instance of the singelton which will be created by accessing the holder class.
+     *
+     * @author patrick
+     */
+    private static class HOLDER {
+        static final ICAPParser INSTANCE = new ICAPParser();
     }
 }

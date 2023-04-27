@@ -7,6 +7,7 @@ package com.github.toolarium.icap.client.impl.dto;
 
 import com.github.toolarium.icap.client.dto.ICAPMode;
 import com.github.toolarium.icap.client.dto.ICAPRemoteServiceConfiguration;
+
 import java.io.Serializable;
 import java.time.Instant;
 import java.util.Arrays;
@@ -51,7 +52,7 @@ public class ICAPRemoteServiceConfigurationImpl implements ICAPRemoteServiceConf
 
 
     /**
-     * @see com.github.toolarium.icap.client.dto.ICAPRemoteServiceConfiguration#getServerPreviewSize()
+     * @see ICAPRemoteServiceConfiguration#getServerPreviewSize()
      */
     @Override
     public int getServerPreviewSize() {
@@ -60,7 +61,7 @@ public class ICAPRemoteServiceConfigurationImpl implements ICAPRemoteServiceConf
 
 
     /**
-     * @see com.github.toolarium.icap.client.dto.ICAPRemoteServiceConfiguration#isServerAllow204()
+     * @see ICAPRemoteServiceConfiguration#isServerAllow204()
      */
     @Override
     public boolean isServerAllow204() {
@@ -69,7 +70,7 @@ public class ICAPRemoteServiceConfigurationImpl implements ICAPRemoteServiceConf
 
 
     /**
-     * @see com.github.toolarium.icap.client.dto.ICAPRemoteServiceConfiguration#getOptionMethods()
+     * @see ICAPRemoteServiceConfiguration#getOptionMethods()
      */
     @Override
     public ICAPMode[] getOptionMethods() {
@@ -78,7 +79,7 @@ public class ICAPRemoteServiceConfigurationImpl implements ICAPRemoteServiceConf
 
 
     /**
-     * @see com.github.toolarium.icap.client.dto.ICAPRemoteServiceConfiguration#getTimestamp()
+     * @see ICAPRemoteServiceConfiguration#getTimestamp()
      */
     @Override
     public Instant getTimestamp() {
@@ -87,7 +88,7 @@ public class ICAPRemoteServiceConfigurationImpl implements ICAPRemoteServiceConf
 
 
     /**
-     * @see java.lang.Object#hashCode()
+     * @see Object#hashCode()
      */
     @Override
     public int hashCode() {
@@ -100,7 +101,7 @@ public class ICAPRemoteServiceConfigurationImpl implements ICAPRemoteServiceConf
 
 
     /**
-     * @see java.lang.Object#equals(java.lang.Object)
+     * @see Object#equals(Object)
      */
     @Override
     public boolean equals(Object obj) {
@@ -123,7 +124,7 @@ public class ICAPRemoteServiceConfigurationImpl implements ICAPRemoteServiceConf
 
 
     /**
-     * @see java.lang.Object#toString()
+     * @see Object#toString()
      */
     @Override
     public String toString() {

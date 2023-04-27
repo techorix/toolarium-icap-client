@@ -7,22 +7,16 @@ package com.github.toolarium.icap.client.impl;
 
 import com.github.toolarium.icap.client.ICAPClient;
 import com.github.toolarium.icap.client.ICAPConnectionManager;
-import com.github.toolarium.icap.client.dto.ICAPConstants;
-import com.github.toolarium.icap.client.dto.ICAPHeaderInformation;
-import com.github.toolarium.icap.client.dto.ICAPMode;
-import com.github.toolarium.icap.client.dto.ICAPRemoteServiceConfiguration;
-import com.github.toolarium.icap.client.dto.ICAPRequestInformation;
-import com.github.toolarium.icap.client.dto.ICAPResource;
-import com.github.toolarium.icap.client.dto.ICAPServiceInformation;
+import com.github.toolarium.icap.client.dto.*;
 import com.github.toolarium.icap.client.exception.ContentBlockedException;
 import com.github.toolarium.icap.client.impl.dto.ICAPRemoteServiceConfigurationImpl;
 import com.github.toolarium.icap.client.util.ICAPClientUtil;
-import java.io.BufferedOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.net.URLEncoder;
-import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.security.DigestInputStream;
 import java.security.DigestOutputStream;
@@ -31,8 +25,6 @@ import java.time.Instant;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 
 /**
@@ -68,7 +60,7 @@ public class ICAPClientImpl implements ICAPClient {
 
     
     /**
-     * @see com.github.toolarium.icap.client.ICAPClient#options()
+     * @see ICAPClient#options()
      */
     @Override    
     public ICAPRemoteServiceConfiguration options() throws IOException {
@@ -77,7 +69,7 @@ public class ICAPClientImpl implements ICAPClient {
     
 
     /**
-     * @see com.github.toolarium.icap.client.ICAPClient#options()
+     * @see ICAPClient#options()
      */
     @Override    
     public ICAPRemoteServiceConfiguration options(final ICAPRequestInformation requestInformation) throws IOException {
@@ -141,7 +133,7 @@ public class ICAPClientImpl implements ICAPClient {
 
 
     /**
-     * @see com.github.toolarium.icap.client.ICAPClient#validateResource(com.github.toolarium.icap.client.dto.ICAPMode, com.github.toolarium.icap.client.dto.ICAPResource)
+     * @see ICAPClient#validateResource(ICAPMode, ICAPResource)
      */
     @Override
     public ICAPHeaderInformation validateResource(final ICAPMode mode, final ICAPResource resource) throws IOException, ContentBlockedException {
@@ -150,7 +142,7 @@ public class ICAPClientImpl implements ICAPClient {
 
 
     /**
-     * @see com.github.toolarium.icap.client.ICAPClient#validateResource(com.github.toolarium.icap.client.dto.ICAPMode, com.github.toolarium.icap.client.dto.ICAPRequestInformation, com.github.toolarium.icap.client.dto.ICAPResource)
+     * @see ICAPClient#validateResource(ICAPMode, ICAPRequestInformation, ICAPResource)
      */
     @Override
     public ICAPHeaderInformation validateResource(final ICAPMode inputMode, final ICAPRequestInformation requestInformation, final ICAPResource resource) throws IOException, ContentBlockedException {
@@ -184,7 +176,7 @@ public class ICAPClientImpl implements ICAPClient {
             previewSize = (int)resource.getResourceLength();
         }
 
-        File resourceResponse = File.createTempFile(requestIdentifier, ".tmp");
+        ByteArrayOutputStream resourceResponse = new ByteArrayOutputStream();
         try (ICAPSocket icapSocket = new ICAPSocket(connectionManager, requestIdentifier, serviceInformation.getHostName(), serviceInformation.getServicePort(), serviceInformation.getServiceName(), serviceInformation.isSecureConnection())) {
             ICAPHeaderInformation icapHeaderInformation = processResource(requestIdentifier, icapSocket, icapMode, requestInformation, resource, resourceResponse);
             icapHeaderInformation.getHeaders().remove(ICAPConstants.HEADER_KEY_X_ICAP_STATUSLINE);
@@ -198,17 +190,17 @@ public class ICAPClientImpl implements ICAPClient {
                     }
                 }
                 
-                if (icapHeaderInformation.containsHeader(ICAPConstants.HEADER_KEY_X_INFECTION_FOUND) || icapHeaderInformation.containsHeader(ICAPConstants.HEADER_KEY_X_VIOLATIONS_FOUND)) {
+                if (icapHeaderInformation.containsHeader(ICAPConstants.HEADER_KEY_X_INFECTION_FOUND) ||
+                        icapHeaderInformation.containsHeader(ICAPConstants.HEADER_KEY_X_VIOLATIONS_FOUND) ||
+                        icapHeaderInformation.containsHeader(ICAPConstants.HEADER_KEY_X_BLOCK_MALWARE)) {
                     String errorContent = "";
-                    if (resourceResponse != null 
-                            && icapHeaderInformation.getHeaders().containsKey(ICAPConstants.HEADER_KEY_ENCAPSULATED) 
-                            && !icapHeaderInformation.getHeaders().get(ICAPConstants.HEADER_KEY_ENCAPSULATED).isEmpty()
-                            && resourceResponse.length() > 0 && resourceResponse.exists()) {                    
+                    if (icapHeaderInformation.getHeaders().containsKey(ICAPConstants.HEADER_KEY_ENCAPSULATED)
+                            && !icapHeaderInformation.getHeaders().get(ICAPConstants.HEADER_KEY_ENCAPSULATED).isEmpty()) {
                         for (int i = 0; i < icapHeaderInformation.getHeaders().get(ICAPConstants.HEADER_KEY_ENCAPSULATED).size(); i++) {
                             String entry = icapHeaderInformation.getHeaders().get(ICAPConstants.HEADER_KEY_ENCAPSULATED).get(i);
                             String[] split = entry.split("=");
                             if (split.length > 1 && split[0].trim().equalsIgnoreCase(icapMode.getTag() + "-body")) {
-                                errorContent = new String(ICAPClientUtil.getInstance().readFile(resourceResponse), Charset.forName("UTF-8")).trim();
+                                errorContent = resourceResponse.toString().trim();
                                 break;
                             }
                         }
@@ -232,8 +224,8 @@ public class ICAPClientImpl implements ICAPClient {
             LOG.warn(requestIdentifier + "Could not access to ICAP server: " + eio.getMessage());
             throw eio;
         } finally {
-            if (resourceResponse != null && resourceResponse.exists()) {
-                resourceResponse.delete();
+            if (resourceResponse != null) {
+                resourceResponse.close();
             }
         }
     }
@@ -269,11 +261,11 @@ public class ICAPClientImpl implements ICAPClient {
      * @throws ContentBlockedException In case the content is blocked
      */
     protected ICAPHeaderInformation processResource(final String requestIdentifier,
-                                                    final ICAPSocket icapSocket, 
+                                                    final ICAPSocket icapSocket,
                                                     final ICAPMode icapMode,
-                                                    final ICAPRequestInformation requestInformation, 
+                                                    final ICAPRequestInformation requestInformation,
                                                     final ICAPResource resource,
-                                                    final File resourceResponse) throws IOException, ContentBlockedException {
+                                                    final ByteArrayOutputStream resourceResponse) throws IOException, ContentBlockedException {
 
         // first part of header
         String httpMethod = "GET";
@@ -310,7 +302,7 @@ public class ICAPClientImpl implements ICAPClient {
         byte[] chunk = new byte[previewSize];
         
         MessageDigest inputMessageDigest = ICAPClientUtil.getInstance().createMessageDigest(messageDigestAlgorithm);
-        DigestInputStream inputstream = new DigestInputStream(resource.getResourceBody(), inputMessageDigest); 
+        DigestInputStream inputstream = new DigestInputStream(resource.getResourceBody(), inputMessageDigest);
         int readBytes = inputstream.read(chunk);
         long totalReadBytes = readBytes;
         icapSocket.write(chunk, 0, readBytes);
@@ -370,7 +362,7 @@ public class ICAPClientImpl implements ICAPClient {
             }
 
             MessageDigest outputMessageDigest = ICAPClientUtil.getInstance().createMessageDigest(messageDigestAlgorithm);
-            try (DigestOutputStream outputstream = new DigestOutputStream(new BufferedOutputStream(new FileOutputStream(resourceResponse)), outputMessageDigest)) {
+            try (DigestOutputStream outputstream = new DigestOutputStream(resourceResponse, outputMessageDigest)) {
                 //int parsedResult = (int) Long.parseLong(hex, 16);
                 icapSocket.processContent(outputstream);
                 outputstream.flush();
@@ -385,10 +377,10 @@ public class ICAPClientImpl implements ICAPClient {
             icapHeaderInformation.getHeaders().put(ICAPConstants.HEADER_KEY_X_RESPONSE_MESSAGE_DIGEST, Arrays.asList(outputMsg));
 
             if (LOG.isDebugEnabled()) {
-                LOG.debug(requestIdentifier + "Resource length: " + resource.getResourceLength() + ", Response length: " + resourceResponse.length() + "?");
+                LOG.debug(requestIdentifier + "Resource length: " + resource.getResourceLength() + ", Response length: " + resourceResponse.toByteArray().length + "?");
             }
             
-            boolean identicalContent = resource.getResourceLength() == resourceResponse.length() && inputMsg.equals(outputMsg);
+            boolean identicalContent = resource.getResourceLength() == resourceResponse.toByteArray().length && inputMsg.equals(outputMsg);
             if (identicalContent) {
                 icapHeaderInformation.getHeaders().put(ICAPConstants.HEADER_KEY_X_IDENTICAL_CONTENT, Arrays.asList("" + identicalContent));
                 if (LOG.isDebugEnabled()) {

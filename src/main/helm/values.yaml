@@ -1,0 +1,17 @@
+resources:
+  limits:
+    cpu: 250m
+    memory: 2000Mi
+  requests:
+    cpu: 100m
+    memory: 256Mi
+
+pullSecrets: pullsecrets-ociconfigjson
+
+namespace: "null"
+
+ociConfigJson:
+  enabled: true
+  registry: "null"
+  username: "null"
+  password: "null"

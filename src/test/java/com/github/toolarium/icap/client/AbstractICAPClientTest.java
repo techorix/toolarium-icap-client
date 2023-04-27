@@ -5,23 +5,22 @@
  */
 package com.github.toolarium.icap.client;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
-import com.github.toolarium.icap.client.dto.ICAPConstants;
-import com.github.toolarium.icap.client.dto.ICAPHeaderInformation;
-import com.github.toolarium.icap.client.dto.ICAPMode;
-import com.github.toolarium.icap.client.dto.ICAPRequestInformation;
-import com.github.toolarium.icap.client.dto.ICAPResource;
+import com.github.toolarium.icap.client.dto.*;
 import com.github.toolarium.icap.client.exception.ContentBlockedException;
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.nio.file.Paths;
+import org.junit.jupiter.api.BeforeAll;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.testcontainers.containers.GenericContainer;
+import org.testcontainers.containers.wait.strategy.Wait;
+import org.testcontainers.junit.jupiter.Container;
+import org.testcontainers.junit.jupiter.Testcontainers;
+import org.testcontainers.utility.DockerImageName;
+
+import java.io.*;
+import java.nio.file.Paths;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 
 /**
@@ -29,13 +28,27 @@ import org.slf4j.LoggerFactory;
  * 
  * @author Patrick Meier
  */
-public abstract class AbstractICAPClientTest { 
+@Testcontainers
+
+public abstract class AbstractICAPClientTest {
     protected static final String SERVICE = "srv_clamav";
     protected static final String SRC_TEST_RESOURCES = "src/test/resources/";
     private static final Logger LOG = LoggerFactory.getLogger(AbstractICAPClientTest.class);
     private Boolean allow204 = null;
-    
-    
+
+    static final int ICAP_PORT_NUMBER = 1344;
+    static final String IMAGE_NAME = "toolarium/toolarium-icap-calmav-docker:0.0.1";
+
+    @Container
+    static final GenericContainer<?> ICAP_CONTAINER = new GenericContainer<>(DockerImageName.parse(IMAGE_NAME))
+            .withExposedPorts(ICAP_PORT_NUMBER)
+            .waitingFor(Wait.forListeningPort());
+
+    @BeforeAll
+    static void beforeAll() {
+        ICAP_CONTAINER.start();
+    }
+
     /**
      * Set allow 204
      * 
@@ -52,7 +65,7 @@ public abstract class AbstractICAPClientTest {
      * @return the client
      */
     protected ICAPClient getICAPClient() {
-        return ICAPClientFactory.getInstance().getICAPClient("localhost", 1344, SERVICE);
+        return ICAPClientFactory.getInstance().getICAPClient("localhost", ICAP_CONTAINER.getMappedPort(ICAP_PORT_NUMBER), SERVICE);
     }   
 
     

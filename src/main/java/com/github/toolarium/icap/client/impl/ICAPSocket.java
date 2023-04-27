@@ -10,6 +10,9 @@ import com.github.toolarium.icap.client.dto.ICAPConstants;
 import com.github.toolarium.icap.client.dto.ICAPHeaderInformation;
 import com.github.toolarium.icap.client.impl.parser.ICAPParser;
 import com.github.toolarium.icap.client.util.ICAPClientUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.Closeable;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -17,8 +20,6 @@ import java.net.Socket;
 import java.nio.charset.Charset;
 import java.util.List;
 import java.util.Map;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 
 /**
@@ -187,7 +188,7 @@ public class ICAPSocket implements AutoCloseable {
 
     
     /**
-     * @see java.lang.AutoCloseable#close()
+     * @see AutoCloseable#close()
      */
     @Override
     public void close() throws IOException {

@@ -5,21 +5,18 @@
  */
 package com.github.toolarium.icap.client;
 
-import static org.junit.jupiter.api.Assertions.fail;
-
-import com.github.toolarium.icap.client.dto.ICAPConstants;
-import com.github.toolarium.icap.client.dto.ICAPHeaderInformation;
-import com.github.toolarium.icap.client.dto.ICAPMode;
-import com.github.toolarium.icap.client.dto.ICAPRequestInformation;
-import com.github.toolarium.icap.client.dto.ICAPResource;
+import com.github.toolarium.icap.client.dto.*;
 import com.github.toolarium.icap.client.exception.ContentBlockedException;
+import org.junit.jupiter.api.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.util.Base64;
-import org.junit.jupiter.api.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
+import static org.junit.jupiter.api.Assertions.fail;
 
 
 /**
@@ -41,7 +38,7 @@ public class ICAPClientUsageTest extends AbstractICAPClientTest {
     public void usage_RESPMOD() {
         // the ICAP-Server information
         final String hostName = LOCALHOST;
-        final int port = 1344;
+        final int port = ICAP_CONTAINER.getMappedPort(ICAP_PORT_NUMBER);
         final String serviceName = "srv_clamav";
         
         // the user, request source and the resource
@@ -95,7 +92,7 @@ public class ICAPClientUsageTest extends AbstractICAPClientTest {
     public void usage_REQMOD() {
         // the ICAP-Server information
         final String hostName = LOCALHOST;
-        final int port = 1344;
+        final int port = ICAP_CONTAINER.getMappedPort(ICAP_PORT_NUMBER);
         final String serviceName = SERVICENAME;
         
         // the user, request source and the resource
@@ -149,7 +146,7 @@ public class ICAPClientUsageTest extends AbstractICAPClientTest {
     public void usageVirusFound_RESPMOD() {
         // the ICAP-Server information
         final String hostName = LOCALHOST;
-        final int port = 1344;
+        final int port = ICAP_CONTAINER.getMappedPort(ICAP_PORT_NUMBER);
         final String serviceName = SERVICENAME;
         
         // the user, request source and the resource
@@ -207,7 +204,7 @@ public class ICAPClientUsageTest extends AbstractICAPClientTest {
     public void usageVirusFound_REQMOD() {
         // the ICAP-Server information
         final String hostName = LOCALHOST;
-        final int port = 1344;
+        final int port = ICAP_CONTAINER.getMappedPort(ICAP_PORT_NUMBER);
         final String serviceName = SERVICENAME;
         
         // the user, request source and the resource
@@ -265,7 +262,7 @@ public class ICAPClientUsageTest extends AbstractICAPClientTest {
     public void usageVirusFoundAsBase64_RESPMOD() {
         // the ICAP-Server information
         final String hostName = LOCALHOST;
-        final int port = 1344;
+        final int port = ICAP_CONTAINER.getMappedPort(ICAP_PORT_NUMBER);
         final String serviceName = SERVICENAME;
         
         // the user, request source and the resource
@@ -324,7 +321,7 @@ public class ICAPClientUsageTest extends AbstractICAPClientTest {
     public void usageVirusFoundAsBase64_REQMODE() {
         // the ICAP-Server information
         final String hostName = LOCALHOST;
-        final int port = 1344;
+        final int port = ICAP_CONTAINER.getMappedPort(ICAP_PORT_NUMBER);
         final String serviceName = SERVICENAME;
         
         // the user, request source and the resource
@@ -382,7 +379,7 @@ public class ICAPClientUsageTest extends AbstractICAPClientTest {
     @Test
     public void usageWithURL_RESPMOD() {
         // the ICAP-Server information
-        final String icapUrl = "icap://localhost:1344/srv_clamav";
+        final String icapUrl = "icap://localhost:" + ICAP_CONTAINER.getMappedPort(ICAP_PORT_NUMBER) + "/srv_clamav";
         
         // the user, request source and the resource
         final String username = "userf";
@@ -434,7 +431,7 @@ public class ICAPClientUsageTest extends AbstractICAPClientTest {
     @Test
     public void usageWithURL_REQMOD() {
         // the ICAP-Server information
-        final String icapUrl = "icap://localhost:1344/srv_clamav";
+        final String icapUrl = "icap://localhost:" + ICAP_CONTAINER.getMappedPort(ICAP_PORT_NUMBER) + "/srv_clamav";
         
         // the user, request source and the resource
         final String username = "userg";

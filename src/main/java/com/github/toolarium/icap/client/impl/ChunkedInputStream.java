@@ -8,17 +8,14 @@ package com.github.toolarium.icap.client.impl;
 import com.github.toolarium.icap.client.dto.ICAPConstants;
 import com.github.toolarium.icap.client.impl.parser.ICAPParser;
 import com.github.toolarium.icap.client.util.HexDump;
-import java.io.BufferedInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.PushbackInputStream;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.*;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 
 /**
@@ -65,7 +62,7 @@ public class ChunkedInputStream extends BufferedInputStream {
     
 
     /**
-     * @see java.io.InputStream#read()
+     * @see InputStream#read()
      */
     @Override
     public int read() throws IOException {
@@ -87,7 +84,7 @@ public class ChunkedInputStream extends BufferedInputStream {
 
     
     /**
-     * @see java.io.InputStream#read(byte[])
+     * @see InputStream#read(byte[])
      */
     @Override
     public int read(byte[] b) throws IOException {
@@ -96,7 +93,7 @@ public class ChunkedInputStream extends BufferedInputStream {
     
 
     /**
-     * @see java.io.InputStream#read(byte[], int, int)
+     * @see InputStream#read(byte[], int, int)
      */
     @Override
     public int read(byte[] b, int off, int len) throws IOException {
@@ -158,7 +155,7 @@ public class ChunkedInputStream extends BufferedInputStream {
 
     
     /**
-     * @see java.io.InputStream#close()
+     * @see InputStream#close()
      */
     @Override
     public void close() throws IOException {
